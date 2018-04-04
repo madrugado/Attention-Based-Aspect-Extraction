@@ -1,6 +1,7 @@
 import gensim
 import codecs
 
+
 class MySentences(object):
     def __init__(self, filename):
         self.filename = filename
@@ -18,9 +19,6 @@ def main(domain):
     model.save(model_file)
 
 
-print 'Pre-training word embeddings ...'
+print('Pre-training word embeddings ...')
 main('restaurant')
 main('beer')
-
-
-
