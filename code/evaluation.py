@@ -40,7 +40,7 @@ out_dir = args.out_dir_path + '/' + args.domain
 U.print_args(args)
 
 assert args.algorithm in {'rmsprop', 'sgd', 'adagrad', 'adadelta', 'adam', 'adamax'}
-assert args.domain in {'restaurant', 'beer'}
+# assert args.domain in {'restaurant', 'beer'}
 
 from keras.preprocessing import sequence
 import reader as dataset
@@ -85,6 +85,15 @@ def evaluation(true, predict, domain):
         print(classification_report(true_label, predict_label,
                                     ['Food', 'Staff', 'Ambience', 'Anecdotes', 'Price', 'Miscellaneous'], digits=3))
 
+    elif domain == 'drugs_cadec':
+        for line in predict:
+            predict_label.append(line.strip())
+
+        for line in true:
+            true_label.append(line.strip())
+
+        print(classification_report(true_label, predict_label, digits=3))
+
     else:
         for line in predict:
             label = line.strip()
@@ -117,9 +126,21 @@ test_fn = K.function([model.get_layer('sentence_input').input, K.learning_phase(
                      [model.get_layer('att_weights').output, model.get_layer('p_t').output])
 att_weights, aspect_probs = test_fn([test_x, 0])
 
+######### Topic weight ###################################
+
+topic_weight_out = codecs.open(out_dir + '/topic_weights', 'w', 'utf-8')
+print('Saving topic weights on test sentences...')
+for probs in aspect_probs:
+    weights_for_sentence = ""
+    for p in probs:
+        weights_for_sentence += str(p) + "\t"
+    weights_for_sentence.strip()
+    topic_weight_out.write(weights_for_sentence + "\n")
+print(aspect_probs)
+
 ## Save attention weights on test sentences into a file
 att_out = codecs.open(out_dir + '/att_weights', 'w', 'utf-8')
-print 'Saving attention weights on test sentences...'
+print('Saving attention weights on test sentences...')
 for c in range(len(test_x)):
     att_out.write('----------------------------------------\n')
     att_out.write(str(c) + '\n')
@@ -146,6 +167,11 @@ for c in range(len(test_x)):
 #            9: 'Food', 10: 'Food', 11: 'Anecdotes', 
 #            12: 'Ambience', 13: 'Staff'}
 
+cluster_map = {0: 'ADE-Neg', 1: 'ADE-Neg', 2: 'Unknown', 3: 'ADE-Neg', 4: 'ADE-Neg', 5: 'Unknown',
+               6: 'Unknown', 7: 'Unknown', 8: 'Unknown', 9: 'ADE-Neg', 10: 'ADE-Neg',
+               11: 'Unknown', 12: 'Unknown', 13: 'Unknown', 14: 'Unknown', 15: 'Unknown',
+               16: 'Unknown', 17: 'Unknown', 18: 'Unknown', 19: 'Unknown', 20: 'Unknown',
+               21: 'Unknown', 22: 'Unknown', 23: 'ADE-Neg', 24: 'ADE-Neg'}
 
 # print '--- Results on %s domain ---' % (args.domain)
 # test_labels = '../preprocessed_data/%s/test_label.txt' % (args.domain)
