@@ -2,6 +2,9 @@ import argparse
 import logging
 import numpy as np
 from time import time
+
+from tqdm import tqdm
+
 import utils as U
 from sklearn.metrics import classification_report
 import codecs
@@ -48,6 +51,11 @@ import reader as dataset
 ###### Get test data #############
 vocab, train_x, test_x, overall_maxlen = dataset.get_data(args.domain, vocab_size=args.vocab_size, maxlen=args.maxlen)
 test_x = sequence.pad_sequences(test_x, maxlen=overall_maxlen)
+test_length = test_x.shape[0]
+splits = [args.batch_size] * (test_length // args.batch_size)
+if test_length % args.batch_size:
+    splits += [test_length % args.batch_size]
+test_x = np.split(test_x, splits)[:-1]
 
 ############# Build model architecture, same as the model used for training #########
 from model import create_model
@@ -124,7 +132,15 @@ for w, ind in vocab.items():
 
 test_fn = K.function([model.get_layer('sentence_input').input, K.learning_phase()],
                      [model.get_layer('att_weights').output, model.get_layer('p_t').output])
-att_weights, aspect_probs = test_fn([test_x, 0])
+att_weights, aspect_probs = [], []
+for batch in tqdm(test_x):
+    cur_att_weights, cur_aspect_probs = test_fn([batch, 0])
+    att_weights.append(cur_att_weights)
+    aspect_probs.append(cur_aspect_probs)
+
+# FIXME: np.concatenate is working strangely
+att_weights = np.concatenate(att_weights)
+aspect_probs = np.concatenate(aspect_probs)
 
 ######### Topic weight ###################################
 
