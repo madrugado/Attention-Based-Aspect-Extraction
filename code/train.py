@@ -47,7 +47,7 @@ U.mkdir_p(out_dir)
 U.print_args(args)
 
 assert args.algorithm in {'rmsprop', 'sgd', 'adagrad', 'adadelta', 'adam', 'adamax'}
-assert args.domain in {'restaurant', 'beer'}
+# assert args.domain in {'restaurant', 'beer'}
 
 if args.seed > 0:
     np.random.seed(args.seed)
