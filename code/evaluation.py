@@ -17,7 +17,7 @@ parser.add_argument("-b", "--batch-size", dest="batch_size", type=int, metavar='
                     help="Batch size (default=50)")
 parser.add_argument("-v", "--vocab-size", dest="vocab_size", type=int, metavar='<int>', default=9000,
                     help="Vocab size. '0' means no limit (default=9000)")
-parser.add_argument("-as", "--aspect-size", dest="aspect_size", type=int, metavar='<int>', default=14,
+parser.add_argument("-as", "--aspect-size", dest="aspect_size", type=int, metavar='<int>', default=15,
                     help="The number of aspects specified by users (default=14)")
 parser.add_argument("--emb", dest="emb_path", type=str, metavar='<str>', help="The path to the word embeddings file")
 parser.add_argument("--epochs", dest="epochs", type=int, metavar='<int>', default=15,
@@ -47,7 +47,7 @@ import reader as dataset
 
 ###### Get test data #############
 vocab, train_x, test_x, overall_maxlen = dataset.get_data(args.domain, vocab_size=args.vocab_size, maxlen=args.maxlen)
-test_x = sequence.pad_sequences(test_x, maxlen=overall_maxlen)
+train_x = sequence.pad_sequences(train_x, maxlen=overall_maxlen)
 
 ############# Build model architecture, same as the model used for training #########
 from model import create_model
@@ -124,19 +124,30 @@ for w, ind in vocab.items():
 
 test_fn = K.function([model.get_layer('sentence_input').input, K.learning_phase()],
                      [model.get_layer('att_weights').output, model.get_layer('p_t').output])
-att_weights, aspect_probs = test_fn([test_x, 0])
 
-######### Topic weight ###################################
+#print(type(train_x))
+step = len(train_x) / 20
+print(step)
+train_x = list(train_x)
+for i in range(0, 20):
+	start = i * step
+	end = i * step + step
+	print(start)
+	print(end)
+	batch_train_x = train_x[start: end]
+	att_weights, aspect_probs = test_fn([batch_train_x, 0])
 
-topic_weight_out = codecs.open(out_dir + '/topic_weights', 'w', 'utf-8')
-print('Saving topic weights on test sentences...')
-for probs in aspect_probs:
-    weights_for_sentence = ""
-    for p in probs:
-        weights_for_sentence += str(p) + "\t"
-    weights_for_sentence.strip()
-    topic_weight_out.write(weights_for_sentence + "\n")
-print(aspect_probs)
+        ######### Topic weight ###################################
+
+	topic_weight_out = codecs.open(out_dir + '/topic_weights', 'w', 'utf-8')
+	print('Saving topic weights on test sentences...')
+	for probs in aspect_probs:
+    		weights_for_sentence = ""
+    		for p in probs:
+        		weights_for_sentence += str(p) + "\t"
+    			weights_for_sentence.strip()
+    		topic_weight_out.write(weights_for_sentence + "\n")
+#print(aspect_probs)
 
 ## Save attention weights on test sentences into a file
 att_out = codecs.open(out_dir + '/att_weights', 'w', 'utf-8')
