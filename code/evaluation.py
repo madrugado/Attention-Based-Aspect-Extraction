@@ -52,10 +52,12 @@ import reader as dataset
 vocab, train_x, test_x, overall_maxlen = dataset.get_data(args.domain, vocab_size=args.vocab_size, maxlen=args.maxlen)
 test_x = sequence.pad_sequences(test_x, maxlen=overall_maxlen)
 test_length = test_x.shape[0]
-splits = [args.batch_size] * (test_length // args.batch_size)
+splits = []
+for i in range(1, test_length // args.batch_size):
+    splits.append(args.batch_size * i)
 if test_length % args.batch_size:
-    splits += [test_length % args.batch_size]
-test_x = np.split(test_x, splits)[:-1]
+    splits += [(test_length // args.batch_size) * args.batch_size]
+test_x = np.split(test_x, splits)
 
 ############# Build model architecture, same as the model used for training #########
 from model import create_model
@@ -138,7 +140,6 @@ for batch in tqdm(test_x):
     att_weights.append(cur_att_weights)
     aspect_probs.append(cur_aspect_probs)
 
-# FIXME: np.concatenate is working strangely
 att_weights = np.concatenate(att_weights)
 aspect_probs = np.concatenate(aspect_probs)
 
@@ -157,6 +158,7 @@ print(aspect_probs)
 ## Save attention weights on test sentences into a file
 att_out = codecs.open(out_dir + '/att_weights', 'w', 'utf-8')
 print('Saving attention weights on test sentences...')
+test_x = np.concatenate(test_x)
 for c in range(len(test_x)):
     att_out.write('----------------------------------------\n')
     att_out.write(str(c) + '\n')
