@@ -47,7 +47,7 @@ U.mkdir_p(out_dir)
 U.print_args(args)
 
 assert args.algorithm in {'rmsprop', 'sgd', 'adagrad', 'adadelta', 'adam', 'adamax'}
-#assert args.domain in {'restaurant', 'beer'}
+# assert args.domain in {'restaurant', 'beer'}
 
 if args.seed > 0:
     np.random.seed(args.seed)
@@ -157,14 +157,14 @@ for ii in range(args.epochs):
         aspect_emb = K.get_value(model.get_layer('aspect_emb').W)
         word_emb = word_emb / np.linalg.norm(word_emb, axis=-1, keepdims=True)
         aspect_emb = aspect_emb / np.linalg.norm(aspect_emb, axis=-1, keepdims=True)
-        aspect_file = codecs.open(out_dir + '/' + args.domain + '_aspect_' + str(len(aspect_emb)) + '_voc_' + str(len(vocab)) + '.log', 'w', 'utf-8')
+        aspect_file = codecs.open(out_dir + '/aspect.log', 'w', 'utf-8')
         model.save_weights(out_dir + '/model_param')
 
         for ind in range(len(aspect_emb)):
             desc = aspect_emb[ind]
             sims = word_emb.dot(desc.T)
             ordered_words = np.argsort(sims)[::-1]
-            desc_list = [vocab_inv[w] + "=" + str(sims[w]) for w in ordered_words[:100]]
+            desc_list = [vocab_inv[w] for w in ordered_words[:100]]
             print('Aspect %d:' % ind)
             print(desc_list)
             aspect_file.write('Aspect %d:\n' % ind)
@@ -173,22 +173,3 @@ for ii in range(args.epochs):
     logger.info('Epoch %d, train: %is' % (ii, tr_time))
     logger.info(
         'Total loss: %.4f, max_margin_loss: %.4f, ortho_reg: %.4f' % (loss, max_margin_loss, loss - max_margin_loss))
-
-
-#########Topic weight###################################   
-
-test_fn = K.function([model.get_layer('sentence_input').input, K.learning_phase()], 
-        [model.get_layer('att_weights').output, model.get_layer('p_t').output])
-att_weights, aspect_probs = test_fn([train_x, 0]) 
-
-topic_weight_out = codecs.open(out_dir + '/train_topic_weights'+ '_aspect_' + str(len(aspect_emb)) + '_voc_' + str(len(vocab)), 'w', 'utf-8')
-print 'Saving topic weights on train sentences...'
-for probs in aspect_probs:
-    weights_for_sentence = ""
-    for p in probs:
-        weights_for_sentence += str(p) + "\t"
-    print weights_for_sentence
-    weights_for_sentence.strip()
-    topic_weight_out.write(weights_for_sentence + "\n")
-
-

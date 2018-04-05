@@ -52,4 +52,5 @@ def preprocess(domain):
 print('Preprocessing raw review sentences ...')
 # preprocess('restaurant')
 # preprocess('beer')
-preprocess('laptops')
+# preprocess('laptops')
+preprocess('hospru')

@@ -4,8 +4,6 @@ from keras import initializers
 from keras import regularizers
 from keras import constraints
 import numpy as np
-import theano.tensor as T
-
 
 class Attention(Layer):
     def __init__(self, W_regularizer=None, b_regularizer=None,
