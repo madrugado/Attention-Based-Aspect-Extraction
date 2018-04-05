@@ -1,0 +1,5 @@
+tensorflow
+sklearn
+gensim
+h5py
+tqdm
