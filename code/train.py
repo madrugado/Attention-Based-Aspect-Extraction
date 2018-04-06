@@ -146,7 +146,7 @@ for ii in range(args.epochs):
         neg_input = next(neg_gen)
 
         batch_loss, batch_max_margin_loss = model.train_on_batch([sen_input, neg_input],
-                                                                 np.ones((args.batch_size, 1, 1)))
+                                                                 np.ones((args.batch_size, 1)))
         loss += batch_loss / batches_per_epoch
         max_margin_loss += batch_max_margin_loss / batches_per_epoch
 
