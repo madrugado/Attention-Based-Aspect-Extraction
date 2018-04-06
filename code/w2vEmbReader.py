@@ -24,8 +24,8 @@ class W2VEmbReader:
             self.embeddings[word] = list(model[word])
             emb_matrix.append(list(model[word]))
 
-        #if emb_dim != None:
-        #    assert self.emb_dim == len(self.embeddings['nice'])
+        # if emb_dim != None:
+        #     assert self.emb_dim == len(self.embeddings['nice'])
 
         self.vector_size = len(self.embeddings)
         self.emb_matrix = np.asarray(emb_matrix)
