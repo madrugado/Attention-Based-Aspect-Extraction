@@ -2,6 +2,7 @@ import logging
 import keras.backend as K
 from keras.layers import Dense, Activation, Embedding, Input
 from keras.models import Model
+from keras.constraints import MaxNorm
 from my_layers import Attention, Average, WeightedSum, WeightedAspectEmb, MaxMargin
 
 logging.basicConfig(level=logging.INFO,
@@ -12,8 +13,7 @@ logger = logging.getLogger(__name__)
 def create_model(args, maxlen, vocab):
     def ortho_reg(weight_matrix):
         ### orthogonal regularization for aspect embedding matrix ###
-        w_n = weight_matrix / K.cast(K.epsilon() + K.sqrt(K.sum(K.square(weight_matrix), axis=-1, keepdims=True)),
-                                     K.floatx())
+        w_n = K.l2_normalize(weight_matrix, axis=-1)
         reg = K.sum(K.square(K.dot(w_n, K.transpose(w_n)) - K.eye(w_n.shape[0].value)))
         return args.ortho_reg * reg
 
@@ -24,12 +24,16 @@ def create_model(args, maxlen, vocab):
     neg_input = Input(shape=(args.neg_size, maxlen), dtype='int32', name='neg_input')
 
     ##### Construct word embedding layer #####
-    word_emb = Embedding(vocab_size, args.emb_dim, mask_zero=True, name='word_emb')
+    word_emb = Embedding(vocab_size, args.emb_dim,
+                         mask_zero=True, name='word_emb',
+                         embeddings_constraint=MaxNorm(10))
 
     ##### Compute sentence representation #####
     e_w = word_emb(sentence_input)
     y_s = Average()(e_w)
-    att_weights = Attention(name='att_weights')([e_w, y_s])
+    att_weights = Attention(name='att_weights',
+                            W_constraint=MaxNorm(10),
+                            b_constraint=MaxNorm(10))([e_w, y_s])
     z_s = WeightedSum()([e_w, att_weights])
 
     ##### Compute representations of negative instances #####
@@ -40,11 +44,12 @@ def create_model(args, maxlen, vocab):
     p_t = Dense(args.aspect_size)(z_s)
     p_t = Activation('softmax', name='p_t')(p_t)
     r_s = WeightedAspectEmb(args.aspect_size, args.emb_dim, name='aspect_emb',
+                            W_constraint=MaxNorm(10),
                             W_regularizer=ortho_reg)(p_t)
 
     ##### Loss #####
     loss = MaxMargin(name='max_margin')([z_s, z_n, r_s])
-    model = Model(input=[sentence_input, neg_input], output=loss)
+    model = Model(inputs=[sentence_input, neg_input], outputs=[loss])
 
     ### Word embedding and aspect embedding initialization ######
     if args.emb_path:

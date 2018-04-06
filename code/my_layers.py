@@ -3,7 +3,7 @@ from keras.engine.topology import Layer
 from keras import initializers
 from keras import regularizers
 from keras import constraints
-import numpy as np
+
 
 class Attention(Layer):
     def __init__(self, W_regularizer=None, b_regularizer=None,
@@ -72,6 +72,9 @@ class Attention(Layer):
     def get_output_shape_for(self, input_shape):
         return (input_shape[0][0], input_shape[0][1])
 
+    def compute_output_shape(self, input_shape):
+        return input_shape[0][0], input_shape[0][1]
+
 
 class WeightedSum(Layer):
     def __init__(self, **kwargs):
@@ -95,6 +98,9 @@ class WeightedSum(Layer):
 
     def compute_mask(self, x, mask=None):
         return None
+
+    def compute_output_shape(self, input_shape):
+        return input_shape[0][0], input_shape[0][-1]
 
 
 class WeightedAspectEmb(Layer):
@@ -140,6 +146,9 @@ class WeightedAspectEmb(Layer):
     def call(self, x, mask=None):
         return K.dot(x, self.W)
 
+    def compute_output_shape(self, input_shape):
+        return input_shape[0][0], self.output_dim
+
 
 class Average(Layer):
     def __init__(self, **kwargs):
@@ -159,6 +168,9 @@ class Average(Layer):
     def compute_mask(self, x, mask=None):
         return None
 
+    def compute_output_shape(self, input_shape):
+        return input_shape[0:-2] + input_shape[-1:]
+
 
 class MaxMargin(Layer):
     def __init__(self, **kwargs):
@@ -169,9 +181,9 @@ class MaxMargin(Layer):
         z_n = input_tensor[1]
         r_s = input_tensor[2]
 
-        z_s = z_s / K.cast(K.epsilon() + K.sqrt(K.sum(K.square(z_s), axis=-1, keepdims=True)), K.floatx())
-        z_n = z_n / K.cast(K.epsilon() + K.sqrt(K.sum(K.square(z_n), axis=-1, keepdims=True)), K.floatx())
-        r_s = r_s / K.cast(K.epsilon() + K.sqrt(K.sum(K.square(r_s), axis=-1, keepdims=True)), K.floatx())
+        z_s = K.l2_normalize(z_s, axis=-1)
+        z_n = K.l2_normalize(z_n, axis=-1)
+        r_s = K.l2_normalize(r_s, axis=-1)
 
         steps = z_n.shape[1].value
 
@@ -189,3 +201,6 @@ class MaxMargin(Layer):
 
     def get_output_shape_for(self, input_shape):
         return (input_shape[0][0], 1)
+
+    def compute_output_shape(self, input_shape):
+        return input_shape[0][0], 1
