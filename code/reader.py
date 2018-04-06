@@ -72,6 +72,8 @@ def read_dataset(domain, phase, vocab, maxlen):
         words = line.strip().split()
         if maxlen > 0 and len(words) > maxlen:
             continue
+        if not len(words):
+            continue
 
         indices = []
         for word in words:
