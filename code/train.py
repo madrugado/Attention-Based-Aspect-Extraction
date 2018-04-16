@@ -134,7 +134,7 @@ for w, ind in vocab.items():
 
 sen_gen = sentence_batch_generator(train_x, args.batch_size)
 neg_gen = negative_batch_generator(train_x, args.batch_size, args.neg_size)
-batches_per_epoch = len(train_x) / args.batch_size
+batches_per_epoch = len(train_x) // args.batch_size
 
 min_loss = float('inf')
 for ii in range(args.epochs):
