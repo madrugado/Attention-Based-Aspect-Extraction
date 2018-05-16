@@ -1,17 +1,21 @@
 import keras.backend as K
-from keras.engine.topology import Layer
+from keras import constraints
 from keras import initializers
 from keras import regularizers
-from keras import constraints
+from keras.engine.topology import Layer
 
 
 class Attention(Layer):
-    def __init__(self, W_regularizer=None, b_regularizer=None,
-                 W_constraint=None, b_constraint=None,
+
+    def __init__(self,
+                 W_regularizer=None,
+                 b_regularizer=None,
+                 W_constraint=None,
+                 b_constraint=None,
                  bias=True, **kwargs):
         """
-        Keras Layer that implements an Content Attention mechanism.
-        Supports Masking.
+            Keras Layer that implements an Content Attention mechanism.
+            Supports Masking.
         """
         self.supports_masking = True
         self.init = initializers.get('glorot_uniform')
@@ -25,6 +29,7 @@ class Attention(Layer):
         super(Attention, self).__init__(**kwargs)
 
     def build(self, input_shape):
+
         assert type(input_shape) == list
         assert len(input_shape) == 2
 
