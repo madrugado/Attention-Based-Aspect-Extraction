@@ -2,6 +2,9 @@ from sklearn.feature_extraction.text import CountVectorizer
 from nltk.corpus import stopwords
 from nltk.stem.wordnet import WordNetLemmatizer
 import codecs
+import json
+from nltk.tokenize import word_tokenize
+from tqdm import tqdm
 
 
 def parseSentence(line):
@@ -42,6 +45,19 @@ def preprocess_test(domain):
             out2.write(label + '\n')
 
 
+def preprocess_line(line):
+    return " ".join(word_tokenize(line.lower()))
+
+
+def preprocess_reviews_train():
+    with open("../preprocessed_data/app_reviews/appstore.json", "rt") as f:
+        reviews = json.load(f)
+    with open("../preprocessed_data/app_reviews/train.txt", "wt") as f:
+        for rev in tqdm(reviews):
+            if isinstance(rev, dict):
+                f.write(preprocess_line(rev["Review"]) + "\n")
+
+
 def preprocess(domain):
     print('\t' + domain + ' train set ...')
     preprocess_train(domain)
@@ -50,7 +66,4 @@ def preprocess(domain):
 
 
 print('Preprocessing raw review sentences ...')
-# preprocess('restaurant')
-# preprocess('beer')
-# preprocess('laptops')
-preprocess('hospru')
+preprocess_reviews_train()
