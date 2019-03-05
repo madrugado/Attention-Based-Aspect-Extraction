@@ -3,3 +3,4 @@ sklearn
 gensim
 h5py
 tqdm
+keras
