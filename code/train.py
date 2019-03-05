@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 #
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-o", "--out-dir", dest="out_dir_path", type=str, metavar='<str>', required=True,
+parser.add_argument("-o", "--out-dir", dest="out_dir_path", type=str, metavar='<str>',
                     help="The path to the output directory", default="output")
 parser.add_argument("-e", "--embdim", dest="emb_dim", type=int, metavar='<int>', default=100,
                     help="Embeddings dimension (default=100)")
@@ -28,7 +28,7 @@ parser.add_argument("-as", "--aspect-size", dest="aspect_size", type=int, metava
                     help="The number of aspects specified by users (default=14)")
 parser.add_argument("--emb-path", dest="emb_path", type=str, metavar='<str>',
                     help="The path to the word embeddings file",
-                    default="preprocessed_data/app_reviews/w2v_64k_unigram_100d.model")
+                    default="../preprocessed_data/app_reviews/w2v_64k_unigram_100d.model")
 parser.add_argument("--epochs", dest="epochs", type=int, metavar='<int>', default=15,
                     help="Number of epochs (default=15)")
 parser.add_argument("-n", "--neg-size", dest="neg_size", type=int, metavar='<int>', default=20,
