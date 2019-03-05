@@ -12,14 +12,14 @@ logger = logging.getLogger(__name__)
 
 class W2VEmbReader:
 
-    def __init__(self, emb_path, emb_dim=None):
+    def __init__(self, emb_path):
 
         logger.info('Loading embeddings from: ' + emb_path)
         self.embeddings = {}
         emb_matrix = []
 
-        model = gensim.models.Word2Vec.load(emb_path)
-        self.emb_dim = emb_dim
+        model = gensim.models.KeyedVectors.load(emb_path)
+        self.emb_dim = model.vector_size
         for word in model.wv.vocab:
             self.embeddings[word] = list(model[word])
             emb_matrix.append(list(model[word]))

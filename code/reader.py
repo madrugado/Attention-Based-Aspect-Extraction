@@ -71,7 +71,7 @@ def read_dataset(domain, phase, vocab, maxlen):
     for line in fin:
         words = line.strip().split()
         if maxlen > 0 and len(words) > maxlen:
-            continue
+            words = words[:maxlen]
         if not len(words):
             continue
 

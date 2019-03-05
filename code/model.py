@@ -54,7 +54,7 @@ def create_model(args, maxlen, vocab):
     ### Word embedding and aspect embedding initialization ######
     if args.emb_path:
         from w2vEmbReader import W2VEmbReader as EmbReader
-        emb_reader = EmbReader(args.emb_path, emb_dim=args.emb_dim)
+        emb_reader = EmbReader(args.emb_path)
         logger.info('Initializing word embedding matrix')
         K.set_value(model.get_layer('word_emb').embeddings,
                     emb_reader.get_emb_matrix_given_vocab(vocab, K.get_value(model.get_layer('word_emb').embeddings)))

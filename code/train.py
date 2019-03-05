@@ -18,9 +18,9 @@ logger = logging.getLogger(__name__)
 parser = argparse.ArgumentParser()
 parser.add_argument("-o", "--out-dir", dest="out_dir_path", type=str, metavar='<str>', required=True,
                     help="The path to the output directory")
-parser.add_argument("-e", "--embdim", dest="emb_dim", type=int, metavar='<int>', default=200,
+parser.add_argument("-e", "--embdim", dest="emb_dim", type=int, metavar='<int>', default=100,
                     help="Embeddings dimension (default=200)")
-parser.add_argument("-b", "--batch-size", dest="batch_size", type=int, metavar='<int>', default=50,
+parser.add_argument("-b", "--batch-size", dest="batch_size", type=int, metavar='<int>', default=32,
                     help="Batch size (default=50)")
 parser.add_argument("-v", "--vocab-size", dest="vocab_size", type=int, metavar='<int>', default=9000,
                     help="Vocab size. '0' means no limit (default=9000)")
@@ -31,7 +31,7 @@ parser.add_argument("--epochs", dest="epochs", type=int, metavar='<int>', defaul
                     help="Number of epochs (default=15)")
 parser.add_argument("-n", "--neg-size", dest="neg_size", type=int, metavar='<int>', default=20,
                     help="Number of negative instances (default=20)")
-parser.add_argument("--maxlen", dest="maxlen", type=int, metavar='<int>', default=0,
+parser.add_argument("--maxlen", dest="maxlen", type=int, metavar='<int>', default=256,
                     help="Maximum allowed number of words during training. '0' means no limit (default=0)")
 parser.add_argument("--seed", dest="seed", type=int, metavar='<int>', default=1234, help="Random seed (default=1234)")
 parser.add_argument("-a", "--algorithm", dest="algorithm", type=str, metavar='<str>', default='adam',
@@ -125,8 +125,7 @@ model.compile(optimizer=optimizer, loss=max_margin_loss, metrics=[max_margin_los
 from keras.models import load_model
 from tqdm import tqdm
 
-logger.info(
-    '--------------------------------------------------------------------------------------------------------------------------')
+logger.info("-"*80)
 
 vocab_inv = {}
 for w, ind in vocab.items():
