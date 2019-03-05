@@ -71,7 +71,7 @@ print('Length of vocab: ', len(vocab))
 
 
 def sentence_batch_generator(data, batch_size):
-    n_batch = len(data) / batch_size
+    n_batch = len(data) // batch_size
     batch_count = 0
     np.random.shuffle(data)
 
