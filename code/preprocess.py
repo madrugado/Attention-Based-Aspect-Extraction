@@ -1,3 +1,4 @@
+import pymorphy2
 from sklearn.feature_extraction.text import CountVectorizer
 from nltk.corpus import stopwords
 from nltk.stem.wordnet import WordNetLemmatizer
@@ -46,7 +47,7 @@ def preprocess_test(domain):
 
 
 def preprocess_line(line):
-    return " ".join(word_tokenize(line.lower()))
+    return " ".join([morph.parse(w)[0].normal_form for w in word_tokenize(line.lower())])
 
 
 def preprocess_reviews_train():
@@ -64,6 +65,8 @@ def preprocess(domain):
     print('\t' + domain + ' test set ...')
     preprocess_test(domain)
 
+
+morph = pymorphy2.MorphAnalyzer()
 
 print('Preprocessing raw review sentences ...')
 preprocess_reviews_train()
