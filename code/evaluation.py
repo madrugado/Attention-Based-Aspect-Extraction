@@ -110,9 +110,11 @@ aspect_probs = np.concatenate(aspect_probs)
 
 ######### Topic weight ###################################
 
-topic_weight_out = open(out_dir + '/topic_weights', 'w', encoding='utf-8')
+topic_weight_out = open(out_dir + '/topic_weights', 'wt', encoding='utf-8')
+labels_out = open(out_dir + '/labels.txt', 'wt', encoding='utf-8')
 print('Saving topic weights on test sentences...')
 for probs in aspect_probs:
+    labels_out.write(str(np.argmax(probs)) + "\n")
     weights_for_sentence = ""
     for p in probs:
         weights_for_sentence += str(p) + "\t"
