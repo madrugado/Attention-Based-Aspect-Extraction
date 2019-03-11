@@ -150,12 +150,6 @@ for c in range(len(test_x)):
 #            9: 'Food', 10: 'Food', 11: 'Anecdotes', 
 #            12: 'Ambience', 13: 'Staff'}
 
-cluster_map = {0: 'ADE-Neg', 1: 'ADE-Neg', 2: 'Unknown', 3: 'ADE-Neg', 4: 'ADE-Neg', 5: 'Unknown',
-               6: 'Unknown', 7: 'Unknown', 8: 'Unknown', 9: 'ADE-Neg', 10: 'ADE-Neg',
-               11: 'Unknown', 12: 'Unknown', 13: 'Unknown', 14: 'Unknown', 15: 'Unknown',
-               16: 'Unknown', 17: 'Unknown', 18: 'Unknown', 19: 'Unknown', 20: 'Unknown',
-               21: 'Unknown', 22: 'Unknown', 23: 'ADE-Neg', 24: 'ADE-Neg'}
-
 # print '--- Results on %s domain ---' % (args.domain)
 # test_labels = '../preprocessed_data/%s/test_label.txt' % (args.domain)
 # prediction(test_labels, aspect_probs, cluster_map, domain=args.domain)
