@@ -73,7 +73,7 @@ class W2VEmbReader:
                         print("Not initialized:\t" + line)
                         one_aspect = np.random.random((self.emb_dim,))
                     aspects.append(one_aspect)
-            self.aspect_size = len(aspects)
+            self.aspect_size += len(aspects)
             aspects = np.concatenate((km_aspects, np.stack(aspects)), axis=0)
         else:
             aspects = km_aspects
