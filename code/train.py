@@ -15,15 +15,9 @@ logger = logging.getLogger(__name__)
 ## Parse arguments
 #
 
-parser = argparse.ArgumentParser()
-parser.add_argument("-o", "--out-dir", dest="out_dir_path", type=str, metavar='<str>',
-                    help="The path to the output directory", default="output")
+parser = U.add_common_args()
 parser.add_argument("-e", "--embdim", dest="emb_dim", type=int, metavar='<int>', default=100,
                     help="Embeddings dimension (default=100)")
-parser.add_argument("-b", "--batch-size", dest="batch_size", type=int, metavar='<int>', default=32,
-                    help="Batch size (default=32)")
-parser.add_argument("-v", "--vocab-size", dest="vocab_size", type=int, metavar='<int>', default=9000,
-                    help="Vocab size. '0' means no limit (default=9000)")
 parser.add_argument("-as", "--aspect-size", dest="aspect_size", type=int, metavar='<int>', default=14,
                     help="The number of aspects specified by users (default=14)")
 parser.add_argument("--emb-path", dest="emb_path", type=str, metavar='<str>',
@@ -33,17 +27,14 @@ parser.add_argument("--epochs", dest="epochs", type=int, metavar='<int>', defaul
                     help="Number of epochs (default=15)")
 parser.add_argument("-n", "--neg-size", dest="neg_size", type=int, metavar='<int>', default=20,
                     help="Number of negative instances (default=20)")
-parser.add_argument("--maxlen", dest="maxlen", type=int, metavar='<int>', default=256,
-                    help="Maximum allowed number of words during training. '0' means no limit (default=0)")
-parser.add_argument("--seed", dest="seed", type=int, metavar='<int>', default=1234, help="Random seed (default=1234)")
+parser.add_argument("--seed", dest="seed", type=int, metavar='<int>', default=1234,
+                    help="Random seed (default=1234)")
 parser.add_argument("-a", "--algorithm", dest="algorithm", type=str, metavar='<str>', default='adam',
                     help="Optimization algorithm (rmsprop|sgd|adagrad|adadelta|adam|adamax) (default=adam)")
-parser.add_argument("--domain", dest="domain", type=str, metavar='<str>', default='app_reviews',
-                    help="domain of the corpus {restaurant, beer}")
 parser.add_argument("--ortho-reg", dest="ortho_reg", type=float, metavar='<float>', default=0.1,
                     help="The weight of orthogonal regularization (default=0.1)")
-
 args = parser.parse_args()
+
 out_dir = args.out_dir_path + '/' + args.domain
 U.mkdir_p(out_dir)
 U.print_args(args)
@@ -159,8 +150,8 @@ for ii in range(args.epochs):
         aspect_emb = K.get_value(model.get_layer('aspect_emb').W)
         word_emb = word_emb / np.linalg.norm(word_emb, axis=-1, keepdims=True)
         aspect_emb = aspect_emb / np.linalg.norm(aspect_emb, axis=-1, keepdims=True)
-        aspect_file = codecs.open(out_dir + '/aspect.log', 'w', 'utf-8')
-        model.save_weights(out_dir + '/model_param')
+        aspect_file = codecs.open(out_dir + '/aspect.log', 'wt', 'utf-8')
+        model.save(out_dir + '/model_param')
 
         for ind in range(len(aspect_emb)):
             desc = aspect_emb[ind]
