@@ -1,9 +1,7 @@
-import argparse
 import logging
 import numpy as np
 from time import time
 import utils as U
-import codecs
 
 logging.basicConfig(
     # filename='out.log',
@@ -150,7 +148,7 @@ for ii in range(args.epochs):
         aspect_emb = K.get_value(model.get_layer('aspect_emb').W)
         word_emb = word_emb / np.linalg.norm(word_emb, axis=-1, keepdims=True)
         aspect_emb = aspect_emb / np.linalg.norm(aspect_emb, axis=-1, keepdims=True)
-        aspect_file = codecs.open(out_dir + '/aspect.log', 'wt', 'utf-8')
+        aspect_file = open(out_dir + '/aspect.log', 'wt', encoding='utf-8')
         model.save(out_dir + '/model_param')
 
         for ind in range(len(aspect_emb)):
