@@ -56,7 +56,7 @@ def preprocess_reviews_train():
     with open("../preprocessed_data/app_reviews/train.txt", "wt") as f:
         for rev in tqdm(reviews):
             if isinstance(rev, dict):
-                f.write(preprocess_line(rev["Review"]) + "\n")
+                f.write(preprocess_line(rev["Title"] + " " + rev["Review"]) + "\n")
 
 
 def preprocess(domain):
