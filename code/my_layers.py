@@ -154,6 +154,18 @@ class WeightedAspectEmb(Layer):
     def compute_output_shape(self, input_shape):
         return input_shape[0], self.output_dim
 
+    def get_config(self):
+        config = super(WeightedAspectEmb, self).get_config()
+        config["input_dim"] = self.input_dim
+        config["output_dim"] = self.output_dim
+        return config
+
+    @classmethod
+    def from_config(cls, config):
+        input_dim, output_dim = config["input_dim"], config["output_dim"]
+        del config["input_dim"], config["output_dim"]
+        return cls(input_dim, output_dim, **config)
+
 
 class Average(Layer):
     def __init__(self, **kwargs):

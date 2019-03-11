@@ -99,21 +99,14 @@ from model import create_model
 import keras.backend as K
 
 logger.info('  Building model')
-
-
-def max_margin_loss(y_true, y_pred):
-    return K.mean(y_pred)
-
-
 model = create_model(args, overall_maxlen, vocab)
 # freeze the word embedding layer
 model.get_layer('word_emb').trainable = False
-model.compile(optimizer=optimizer, loss=max_margin_loss, metrics=[max_margin_loss])
+model.compile(optimizer=optimizer, loss=U.max_margin_loss, metrics=[U.max_margin_loss])
 
 ###############################################################################################################################
 ## Training
 #
-from keras.models import load_model
 from tqdm import tqdm
 
 logger.info("-"*80)

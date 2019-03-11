@@ -1,5 +1,5 @@
 import numpy as np
-from keras.engine.saving import load_model
+from keras.models import load_model
 from tqdm import tqdm
 from sklearn.metrics import classification_report
 import keras.backend as K
@@ -11,6 +11,7 @@ from my_layers import Attention, Average, WeightedSum, WeightedAspectEmb, MaxMar
 
 ######### Get hyper-params in order to rebuild the model architecture ###########
 # The hyper parameters should be exactly the same as those used for training
+
 parser = U.add_common_args()
 args = parser.parse_args()
 
@@ -35,9 +36,11 @@ test_x = np.split(test_x, splits)
 ############# Build model architecture, same as the model used for training #########
 
 ## Load the save model parameters
-model = load_model(out_dir + '/model_param', custom_objects={"Attention": Attention, "Average": Average,
-                                                             "WeightedSum": WeightedSum, "MaxMargin": MaxMargin,
-                                                             "WeigthedAspectEmb": WeightedAspectEmb})
+model = load_model(out_dir + '/model_param',
+                   custom_objects={"Attention": Attention, "Average": Average, "WeightedSum": WeightedSum,
+                                   "MaxMargin": MaxMargin, "WeightedAspectEmb": WeightedAspectEmb,
+                                   "max_margin_loss": U.max_margin_loss},
+                   compile=True)
 
 
 ################ Evaluation ####################################

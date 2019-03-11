@@ -1,7 +1,9 @@
 import argparse
 import sys
-import os, errno
+import os
+import errno
 import logging
+import keras.backend as K
 
 
 # -----------------------------------------------------------------------------------------------------------#
@@ -195,3 +197,7 @@ def add_common_args(parser=None):
     parser.add_argument("--domain", dest="domain", type=str, metavar='<str>', default='app_reviews',
                         help="domain of the corpus {restaurant, beer}")
     return parser
+
+
+def max_margin_loss(_, y_pred):
+    return K.mean(y_pred)
