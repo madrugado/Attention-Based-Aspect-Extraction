@@ -1,9 +1,9 @@
-import codecs
 import logging
+import os
+import re
 import numpy as np
 import gensim
 from sklearn.cluster import KMeans
-import pickle
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(levelname)s %(message)s')
@@ -11,9 +11,9 @@ logger = logging.getLogger(__name__)
 
 
 class W2VEmbReader:
-
-    def __init__(self, emb_path):
-
+    def __init__(self, data_path, emb_name):
+        self.data_path = data_path
+        emb_path = os.path.join(data_path, emb_name)
         logger.info('Loading embeddings from: ' + emb_path)
         self.embeddings = {}
         emb_matrix = []
@@ -29,7 +29,7 @@ class W2VEmbReader:
 
         self.vector_size = len(self.embeddings)
         self.emb_matrix = np.asarray(emb_matrix)
-
+        self.aspect_size = None
         logger.info('  #vectors: %i, #dimensions: %i' % (self.vector_size, self.emb_dim))
 
     def get_emb_given_word(self, word):
@@ -53,13 +53,31 @@ class W2VEmbReader:
         norm_emb_matrix = emb_matrix / np.linalg.norm(emb_matrix, axis=-1, keepdims=True)
         return norm_emb_matrix
 
-    def get_aspect_matrix(self, n_clusters):
-        km = KMeans(n_clusters=n_clusters)
-        km.fit(self.emb_matrix)
-        clusters = km.cluster_centers_
-
+    def get_aspect_matrix(self, n_clusters=0):
+        seed_words_path = os.path.join(self.data_path, "seed_words.txt")
+        self.aspect_size = n_clusters
+        if not os.path.exists(seed_words_path):
+            km = KMeans(n_clusters=n_clusters)
+            km.fit(self.emb_matrix)
+            aspects = km.cluster_centers_
+        else:
+            aspects = []
+            with open(seed_words_path) as f:
+                for line in f:
+                    one_aspect = []
+                    for word in re.split('\W+', line.lower()):
+                        if word in self.embeddings:
+                            one_aspect.append(self.embeddings[word])
+                    if one_aspect:
+                        one_aspect = np.mean(one_aspect, axis=0)
+                    else:
+                        print("Not initialized:\t" + line)
+                        one_aspect = np.random.random((self.emb_dim,))
+                    aspects.append(one_aspect)
+            self.aspect_size = len(aspects)
+            aspects = np.stack(aspects)
         # L2 normalization
-        norm_aspect_matrix = clusters / np.linalg.norm(clusters, axis=-1, keepdims=True)
+        norm_aspect_matrix = aspects / np.linalg.norm(aspects, axis=-1, keepdims=True)
         return norm_aspect_matrix
 
     def get_emb_dim(self):
