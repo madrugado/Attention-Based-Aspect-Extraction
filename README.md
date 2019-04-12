@@ -1,5 +1,14 @@
-# Unsupervised Aspect Extraction
-Codes and Dataset for ACL2017 paper ‘‘An unsupervised neural attention model for aspect extraction’’. [(pdf)](http://aclweb.org/anthology/P/P17/P17-1036.pdf)
+# Attention-Based Aspect Extraction
+This repository is a fork of [paper authors' repository](https://github.com/ruidan/Unsupervised-Aspect-Extraction) with
+following code improvements:
+* python 3 compliant
+* Keras 2 compliant
+* Keras backend independent
+
+In addition there is an additional functionality:
+* seed words 
+* no need to specify embedding dimension with external embedding usage model
+
 
 ## Data
 You can find the pre-processed datasets and the pre-trained word embeddings in [[Download]](https://drive.google.com/open?id=1L4LRi3BWoCqJt5h45J2GIAW9eP_zjiNc). The zip file should be decompressed and put in the main folder.
@@ -13,11 +22,11 @@ respectively in code/ . The preprocessed files and trained word embeddings for e
 
 ## Train
 Under code/ and type the following command for training:
-```
-THEANO_FLAGS="device=gpu0,floatX=float32" python train.py \
+```bash
+python train.py \
 --emb ../preprocessed_data/$domain/w2v_embedding \
 --domain $domain \
--o output_dir \
+-o output_dir 
 ```
 where *$domain* in ['restaurant', 'beer'] is the corresponding domain, *--emb* is the path to the pre-trained word embeddings, *-o* is the path of the output directory. You can find more arguments/hyper-parameters defined in train.py with default values used in our experiments.
 
@@ -25,10 +34,10 @@ After training, two output files will be saved in code/output_dir/$domain/: 1) *
 
 ## Evaluation
 Under code/ and type the following command:
-```
-THEANO_FLAGS="device=gpu0,floatX=float32" python evaluation.py \
+```bash
+python evaluation.py \
 --domain $domain \
--o output_dir \
+-o output_dir 
 ```
 Note that you should keep the values of arguments for evaluation the same as those for training (except *--emb*, you don't need to specify it), as we need to first rebuild the network architecture and then load the saved model weights.
 
@@ -39,12 +48,15 @@ To assign each test sentence a gold aspect label, you need to first manually map
 One example of trained model for the restaurant domain has been put in pre_trained_model/restaurant/, and the corresponding aspect mapping has been provided in evaluation.py (line 136-139). You can uncomment line 28 in evaluation.py and run the above command to evaluate the trained model.
 
 ## Dependencies
-* keras 1.2.1
-* theano 0.9.0
-* numpy 1.13.3
+* keras>=2.0
+* tensorflow-gpu>=1.4
+* numpy>=1.13
+
+This code also tested to work with CNTK and MXNet. With MXNet there were some issues with Keras internals, 
+hope they will be improved in future versions.
 
 ## Cite
-If you use the code, please cite the following paper:
+If you use the code, please consider citing original paper:
 ```
 @InProceedings{he-EtAl:2017:Long2,
   author    = {He, Ruidan  and  Lee, Wee Sun  and  Ng, Hwee Tou  and  Dahlmeier, Daniel},
