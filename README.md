@@ -28,7 +28,7 @@ python train.py \
 --domain $domain \
 -o output_dir 
 ```
-where *$domain* in ['restaurant', 'beer'] is the corresponding domain, *--emb* is the path to the pre-trained word embeddings, *-o* is the path of the output directory. You can find more arguments/hyper-parameters defined in train.py with default values used in our experiments.
+where *$domain* in ['restaurant', 'beer'] is the corresponding domain, *--emb* is the path to the pre-trained word embeddings, it could be just a name of a file, then it will be searched in `../preprocessed_data/$domain/`, otherwise it will be searched by absolute path; *-o* is the path of the output directory. You can find more arguments/hyper-parameters defined in train.py with default values used in our experiments.
 
 After training, two output files will be saved in code/output_dir/$domain/: 1) *aspect.log* contains extracted aspects with top 100 words for each of them. 2) *model_param* contains the saved model weights
 

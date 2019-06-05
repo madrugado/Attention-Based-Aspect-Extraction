@@ -14,7 +14,8 @@ logger = logging.getLogger(__name__)
 class W2VEmbReader:
     def __init__(self, data_path, emb_name):
         self.data_path = data_path
-        emb_path = os.path.join(data_path, emb_name)
+        if os.path.sep not in emb_name:
+            emb_path = os.path.join(data_path, emb_name)
         logger.info('Loading embeddings from: ' + emb_path)
         self.embeddings = {}
         emb_matrix = []

@@ -1,7 +1,7 @@
 numpy
 tensorflow
 sklearn
-gensim
+gensim<=3.1
 h5py
 tqdm
-keras
+keras>=2.0
