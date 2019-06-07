@@ -16,6 +16,8 @@ class W2VEmbReader:
         self.data_path = data_path
         if os.path.sep not in emb_name:
             emb_path = os.path.join(data_path, emb_name)
+        else:
+            emb_path = emb_name
         logger.info('Loading embeddings from: ' + emb_path)
         self.embeddings = {}
         emb_matrix = []
