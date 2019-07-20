@@ -1,11 +1,10 @@
-import pymorphy2
 from sklearn.feature_extraction.text import CountVectorizer
 from nltk.corpus import stopwords
 from nltk.stem.wordnet import WordNetLemmatizer
 import codecs
 import json
-from nltk.tokenize import word_tokenize
 from tqdm import tqdm
+import argparse
 
 
 def parseSentence(line):
@@ -66,7 +65,19 @@ def preprocess(domain):
     preprocess_test(domain)
 
 
-morph = pymorphy2.MorphAnalyzer()
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--domain", dest="domain", type=str, metavar='<str>', default='restaurant',
+                        help="domain of the corpus")
+    args = parser.parse_args()
 
-print('Preprocessing raw review sentences ...')
-preprocess_reviews_train()
+    if args.domain == "app_reviews":
+        import pymorphy2
+        from nltk.tokenize import word_tokenize
+
+        morph = pymorphy2.MorphAnalyzer()
+
+        print('Preprocessing raw review sentences ...')
+        preprocess_reviews_train()
+    else:
+        preprocess(args.domain)
