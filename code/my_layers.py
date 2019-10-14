@@ -35,13 +35,13 @@ class Attention(Layer):
 
         self.steps = input_shape[0][1]
 
-        self.W = self.add_weight((input_shape[0][-1], input_shape[1][-1]),
+        self.W = self.add_weight(shape=(input_shape[0][-1], input_shape[1][-1]),
                                  initializer=self.init,
                                  name='{}_W'.format(self.name),
                                  regularizer=self.W_regularizer,
                                  constraint=self.W_constraint)
         if self.bias:
-            self.b = self.add_weight((1,),
+            self.b = self.add_weight(shape=(1,),
                                      initializer='zero',
                                      name='{}_b'.format(self.name),
                                      regularizer=self.b_regularizer,
@@ -132,7 +132,7 @@ class WeightedAspectEmb(Layer):
         super(WeightedAspectEmb, self).__init__(**kwargs)
 
     def build(self, input_shape):
-        self.W = self.add_weight((self.input_dim, self.output_dim),
+        self.W = self.add_weight(shape=(self.input_dim, self.output_dim),
                                  initializer=self.init,
                                  name='{}_W'.format(self.name),
                                  regularizer=self.W_regularizer,
