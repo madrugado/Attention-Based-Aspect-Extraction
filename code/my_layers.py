@@ -202,7 +202,7 @@ class MaxMargin(Layer):
         z_n = K.l2_normalize(z_n, axis=-1)
         r_s = K.l2_normalize(r_s, axis=-1)
 
-        steps = z_n.shape[1].value
+        steps = z_n.shape[1]
 
         pos = K.sum(z_s * r_s, axis=-1, keepdims=True)
         pos = K.repeat_elements(pos, steps, axis=1)
