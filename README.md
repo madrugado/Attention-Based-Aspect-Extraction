@@ -15,8 +15,8 @@ You can find the pre-processed datasets and the pre-trained word embeddings in [
 
 You can also download the original datasets of Restaurant domain and Beer domain in [[Download]](https://drive.google.com/open?id=1qzbTiJ2IL5ATZYNMp2DRkHvbFYsnOVAQ). For preprocessing, put the decompressed zip file in the main folder and run 
 ```
-python word2vec.py
 python preprocess.py
+python word2vec.py
 ```
 respectively in code/ . The preprocessed files and trained word embeddings for each domain will be saved in a folder preprocessed_data/.
 
@@ -24,11 +24,11 @@ respectively in code/ . The preprocessed files and trained word embeddings for e
 Under code/ and type the following command for training:
 ```bash
 python train.py \
---emb ../preprocessed_data/$domain/w2v_embedding \
+--emb-name ../preprocessed_data/$domain/w2v_embedding \
 --domain $domain \
 -o output_dir 
 ```
-where *$domain* in ['restaurant', 'beer'] is the corresponding domain, *--emb* is the path to the pre-trained word embeddings, it could be just a name of a file, then it will be searched in `../preprocessed_data/$domain/`, otherwise it will be searched by absolute path; *-o* is the path of the output directory. You can find more arguments/hyper-parameters defined in train.py with default values used in our experiments.
+where *$domain* in ['restaurant', 'beer'] is the corresponding domain, *--emb*-name is the path to the pre-trained word embeddings, it could be just a name of a file, then it will be searched in `../preprocessed_data/$domain/`, otherwise it will be searched by absolute path; *-o* is the path of the output directory. You can find more arguments/hyper-parameters defined in train.py with default values used in our experiments.
 
 After training, two output files will be saved in code/output_dir/$domain/: 1) *aspect.log* contains extracted aspects with top 100 words for each of them. 2) *model_param* contains the saved model weights
 
@@ -39,7 +39,7 @@ python evaluation.py \
 --domain $domain \
 -o output_dir 
 ```
-Note that you should keep the values of arguments for evaluation the same as those for training (except *--emb*, you don't need to specify it), as we need to first rebuild the network architecture and then load the saved model weights.
+Note that you should keep the values of arguments for evaluation the same as those for training (except *--emb-name*, you don't need to specify it), as we need to first rebuild the network architecture and then load the saved model weights.
 
 This will output a file *att_weights* that contains the attention weights on all test sentences in code/output_dir/$domain.
 
