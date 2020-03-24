@@ -1,7 +1,10 @@
-numpy
-tensorflow
-sklearn
-gensim<=3.1
-h5py
+numpy>=1.13
+scipy==1.2.1
+tensorflow~=1.4
+keras~=2.0
+gensim==3.1
+pymorphy2==0.8
+nltk
+nltk_data
+scikit-learn
 tqdm
-keras>=2.0
