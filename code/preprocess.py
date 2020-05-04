@@ -45,19 +45,6 @@ def preprocess_test(domain):
             out2.write(label + '\n')
 
 
-def preprocess_line(line):
-    return " ".join([morph.parse(w)[0].normal_form for w in word_tokenize(line.lower())])
-
-
-def preprocess_reviews_train():
-    with open("../preprocessed_data/app_reviews/appstore.json", "rt") as f:
-        reviews = json.load(f)
-    with open("../preprocessed_data/app_reviews/train.txt", "wt") as f:
-        for rev in tqdm(reviews):
-            if isinstance(rev, dict):
-                f.write(preprocess_line(rev["Title"] + " " + rev["Review"]) + "\n")
-
-
 def preprocess(domain):
     print('\t' + domain + ' train set ...')
     preprocess_train(domain)
@@ -71,13 +58,4 @@ if __name__ == "__main__":
                         help="domain of the corpus")
     args = parser.parse_args()
 
-    if args.domain == "app_reviews":
-        import pymorphy2
-        from nltk.tokenize import word_tokenize
-
-        morph = pymorphy2.MorphAnalyzer()
-
-        print('Preprocessing raw review sentences ...')
-        preprocess_reviews_train()
-    else:
-        preprocess(args.domain)
+    preprocess(args.domain)

@@ -194,7 +194,7 @@ def add_common_args(parser=None):
                         help="Vocab size. '0' means no limit (default=9000)")
     parser.add_argument("--maxlen", dest="maxlen", type=int, metavar='<int>', default=256,
                         help="Maximum allowed number of words during training. '0' means no limit (default=0)")
-    parser.add_argument("--domain", dest="domain", type=str, metavar='<str>', default='app_reviews',
+    parser.add_argument("--domain", dest="domain", type=str, metavar='<str>', default='restaurant',
                         help="domain of the corpus {restaurant, beer}")
     return parser
 
