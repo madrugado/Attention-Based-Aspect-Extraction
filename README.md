@@ -30,7 +30,7 @@ python word2vec.py
 ```
 respectively in `code/`. The preprocessed files and trained word embeddings for each domain will be saved in a folder `preprocessed_data/`.
 
-You can also find the pre-processed datasets and the pre-trained word embeddings in [[Download]](https://drive.google.com/open?id=1L4LRi3BWoCqJt5h45J2GIAW9eP_zjiNc).
+You can also find the pre-processed datasets in [[Download]](https://drive.google.com/open?id=1L4LRi3BWoCqJt5h45J2GIAW9eP_zjiNc).
 The zip file should be decompressed and put in the main folder.
 
 ## Train
