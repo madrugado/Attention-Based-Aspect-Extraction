@@ -29,6 +29,7 @@ def preprocess_train(domain):
 def preprocess_test(domain):
     # For restaurant domain, only keep sentences with single 
     # aspect label that in {Food, Staff, Ambience}
+    # For speaker domain, only keep 'sound', 'durability', 'design', 'price' aspects
 
     f1 = codecs.open('../datasets/' + domain + '/test.txt', 'r', 'utf-8')
     f2 = codecs.open('../datasets/' + domain + '/test_label.txt', 'r', 'utf-8')
@@ -37,7 +38,7 @@ def preprocess_test(domain):
 
     for text, label in zip(f1, f2):
         label = label.strip()
-        if domain == 'restaurant' and label not in ['Food', 'Staff', 'Ambience']:
+        if domain == 'speaker' and label not in ['sound', 'durability', 'design', 'price']:
             continue
         tokens = parseSentence(text)
         if len(tokens) > 0:
@@ -54,7 +55,7 @@ def preprocess(domain):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--domain", dest="domain", type=str, metavar='<str>', default='restaurant',
+    parser.add_argument("--domain", dest="domain", type=str, metavar='<str>', default='speaker',
                         help="domain of the corpus")
     args = parser.parse_args()
 

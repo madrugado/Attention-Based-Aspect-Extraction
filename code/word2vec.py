@@ -17,9 +17,10 @@ def main(domain):
     sentences = MySentences(source)
     model = gensim.models.Word2Vec(sentences, size=200, window=10, min_count=5, workers=4)
     model.save(model_file)
-
+    print('Done!')
 
 print('Pre-training word embeddings ...')
 # main('restaurant')
 # main('beer')
 # main('laptops')
+main('speaker')
