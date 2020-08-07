@@ -23,12 +23,14 @@ This code also tested to work with CNTK and MXNet. With MXNet there were some is
 
 You can download the original datasets (of Restaurant and Beer domains) in [[Download]](https://drive.google.com/open?id=1qzbTiJ2IL5ATZYNMp2DRkHvbFYsnOVAQ).
 
-For preprocessing, put the decompressed zip file in the main folder and run:
+For preprocessing, put the decompressed zip file in the main folder and run in `code/` folder:
 ```bash
-python preprocess.py
-python word2vec.py
+python preprocess.py --domain $domain
+python word2vec.py --domain $domain
 ```
-respectively in `code/`. The preprocessed files and trained word embeddings for each domain will be saved in a folder `preprocessed_data/`.
+where:
+* `$domain` (`restaurant` or `beer`) is the corresponding domain.
+The preprocessed files and trained word embeddings for each domain will be saved in a folder `preprocessed_data/`.
 
 You can also find the pre-processed datasets and the pre-trained word embeddings in [[Download]](https://drive.google.com/open?id=1L4LRi3BWoCqJt5h45J2GIAW9eP_zjiNc).
 The zip file should be decompressed and put in the main folder.
@@ -48,7 +50,7 @@ where:
 * `--emb-name` is the path to the pre-trained word embeddings, it could be just a name of a file, then it will be searched in `../preprocessed_data/$domain/`, otherwise it will be searched by absolute path;
 * `--out-dir` is the path of the output directory.
 
-You can find more arguments/hyper-parameters defined in [code/train.py] with default values used in our experiments.
+You can find more arguments/hyper-parameters defined in [code/train.py](code/train.py) with default values used in our experiments.
 
 After training, two output files will be saved in `../output/$domain/`:
 * `aspect.log` contains extracted aspects with top 100 words for each of them.
