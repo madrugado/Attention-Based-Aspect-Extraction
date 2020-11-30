@@ -120,6 +120,8 @@ for probs in aspect_probs:
         weights_for_sentence += str(p) + "\t"
     weights_for_sentence.strip()
     topic_weight_out.write(weights_for_sentence + "\n")
+topic_weight_out.close()
+labels_out.close()
 print(aspect_probs)
 
 ## Save attention weights on test sentences into a file
@@ -139,6 +141,7 @@ for c in range(len(test_x)):
     att_out.write(' '.join(words) + '\n')
     for j in range(len(words)):
         att_out.write(words[j] + ' ' + str(round(weights[j], 3)) + '\n')
+att_out.close()
 
 ######################################################
 # Uncomment the below part for F scores
